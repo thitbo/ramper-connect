@@ -13,7 +13,7 @@ export const ContextProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false)
   const [state, onUpdateState] = useState({})
 
-  const isExtension = !!window.ramper2
+  const isExtension = !!window.tomowallet
   const client = React.useRef({})
 
   useEffect(() => {
@@ -24,9 +24,9 @@ export const ContextProvider = ({ children }) => {
     // Connect From Extension
     if (isExtension) {
       try {
-        const result = await window.ramper2.provider.connect()
+        const result = await window.tomowallet.provider.connect()
         setIsConnected(true)
-
+        setState({ accounts: result });
         return result
       } catch (e) {}
     }

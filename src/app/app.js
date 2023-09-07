@@ -110,7 +110,7 @@ export function App() {
         <div className="max-w-screen-xl m-auto h-60 md:h-1/3 px-5 flex flex-col justify-end items-center md:justify-center md:items-start">
           <img src={Coin98TextLogo} className="w-36" alt="" />
           <div className="text-[2.8rem] text-white">
-            <span className="text-[#e5b842]">Ramper</span> Connect
+            <span className="text-[#e5b842]">Tomo Wallet</span> Connect
           </div>
 
           <div className="text-white ">E2E Test Dapps</div>

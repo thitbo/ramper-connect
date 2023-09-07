@@ -23,24 +23,27 @@ const useEvmConnect = () => {
 
   const { accounts } = state;
   const isWindow = typeof window !== 'undefined';
-  const ethereum = isWindow && (sdk || window.ramper2?.provider);
+  const ethereum = isWindow && (sdk || window.tomowallet?.provider);
 
   function stringifiableToHex(value) {
     return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)));
   }
 
   const onClickConnect = async () => {
+    console.log('ON CLICK CONNECT', ethereum);
     try {
-      const newAccounts = await ethereum.request({
-        method: 'eth_accounts',
-      });
-      console.log('newAccounts ok gege', newAccounts);
+      // const newAccounts = await ethereum.request({
+      //   method: 'eth_accounts',
+      // });
+       const newAccounts = await ethereum.connect();
+
+      console.log('newAccounts neeeee', newAccounts);
 
       setState({ accounts: newAccounts });
       // setAccounts(newAccounts)
       return newAccounts;
     } catch (error) {
-      console.error('err connect', error);
+      console.log('err connect', error);
     }
   };
 

@@ -14,19 +14,22 @@ import ButtonConnect from '../ButtonConnect'
 import ConnectCardBox from '../ConnectCard'
 import { ethers } from 'ethers'
 import { evmCode } from '../../controller/commons/constant'
+import useEvmConnect from '../../controller/web3/evm'
 
 function stringifiableToHex(value) {
   return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)))
 }
 
 function ContentEvm() {
-  const [state, setState] = useState({})
-  const { client, isExtension, isConnected, connect: onConnect } = useConnect()
+  // const [state, setState] = useState({})
+  const {state, setState, client, isExtension, isConnected, connect: onConnect } = useConnect()
+  // const { onClickConnect } = useEvmConnect()
 
   const onStateUpdate = (field, value) => {
     if (typeof field === 'object') {
       setState((oldState) => {
         const stateUpdate = { ...oldState }
+
 
         Object.keys(field).forEach((key) => {
           stateUpdate[key] = field[key]
@@ -34,13 +37,17 @@ function ContentEvm() {
         return stateUpdate
       })
     } else {
-      setState((oldState) => ({ ...oldState, [field]: value }))
+
+      setState({ ...state, [field]: value })
     }
   }
 
+
+
+
   const _provider = useMemo(() => {
     if (isExtension) {
-      return window.ramper2.provider
+      return window.tomowallet.provider
     }
 
     return client
@@ -52,6 +59,7 @@ function ContentEvm() {
       const response = await _provider.request({
         method: 'eth_accounts'
       })
+
       onStateUpdate(
         'ethAccounts',
         isExtension ? response : response.error || response.result
@@ -114,11 +122,14 @@ function ContentEvm() {
         method: 'personal_sign',
         params: [msg, from, 'Example password']
       })
+      console.log('response onPersonalSign', response);
+
       onStateUpdate(
         'personalSign',
         isExtension ? response : response.error || response.result
       )
     } catch (e) {
+      console.log('errr', e);
       onStateUpdate('personalSign', e.toString())
     }
   }
@@ -136,7 +147,7 @@ function ContentEvm() {
         data: msg,
         sig: sign
       })
-      if (recoveredAddr === from) {
+      if (recoveredAddr?.toLowerCase() === from?.toLowerCase()) {
         console.log(`SigUtil Successfully verified signer as ${recoveredAddr}`)
         sign = recoveredAddr
       } else {
@@ -583,8 +594,11 @@ function ContentEvm() {
     }
   }, [isConnected])
 
+  console.log('check', {isConnected,state });
+
   const isDisableAction =
     !isConnected || (!state.ethAccounts && !state.accounts)
+
   const chainId = state.chainId
   const netVersion = state.netVersion
   const walletAddress =

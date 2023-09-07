@@ -1,7 +1,9 @@
+const providerName = 'tomowallet'
+
 const evmCode = {
   connect: `const onClickConnect = async () => {
   try {
-    const newAccounts = await window.ramper2.provider.request({
+    const newAccounts = await window.${providerName}.provider.request({
       method: 'eth_accounts'
     })
     return newAccounts
@@ -23,7 +25,7 @@ const evmCode = {
 
   sendEth: `const onEthSendTransaction = async () => {
   try {
-    const result = await window.ramper2.provider.request({
+    const result = await window.${providerName}.provider.request({
       method: 'eth_sendTransaction',
       params: [
         {
@@ -41,7 +43,7 @@ const evmCode = {
 
   getEncryptKey: `const onEthGetPublicEncryptionKey = async () => {
   try {
-    const result = await window.ramper2.provider.request({
+    const result = await window.${providerName}.provider.request({
       method: 'eth_getEncryptionPublicKey',
       params: [<Your Account>]
     })
@@ -68,7 +70,7 @@ const evmCode = {
 
   getDecrypt: `const onDecrypt = async () => {
   try {
-    const result = await window.ramper2.provider.request({
+    const result = await window.${providerName}.provider.request({
       method: 'eth_decrypt',
       params: [encryptResult, ethereum.selectedAddress]
     })
@@ -82,7 +84,7 @@ const evmCode = {
   try {
     const msg = 'Coin98 Connect Example Message'
 
-    const result = await window.ramper2.provider.request({
+    const result = await window.${providerName}.provider.request({
       method: 'eth_sign',
       params: [msg]
     })
@@ -98,7 +100,7 @@ const evmCode = {
     try {
     const from = <Your Account>
     const msg = \`0x\${Buffer.from(exampleMessage, 'utf8').toString('hex')}\`
-    const sign = await window.ramper2.provider.request({
+    const sign = await window.${providerName}.provider.request({
       method: 'personal_sign',
       params: [msg, from, 'Example password']
     })
@@ -131,7 +133,7 @@ const evmCode = {
       console.log(\`Failed comparing \${recoveredAddr} to \${from}\`)
     }
 
-    const ecRecoverAddr = await window.ramper2.provider.request({
+    const ecRecoverAddr = await window.${providerName}.provider.request({
       method: 'personal_ecRecover',
       params: [msg, personalSignResult]
     })
@@ -169,7 +171,7 @@ const evmCode = {
   ]
   try {
     const from = <Your Account>
-    const sign = await window.ramper2.provider.request({
+    const sign = await window.${providerName}.provider.request({
       method: 'eth_signTypedData',
       params: [msgParams, from]
     })
@@ -215,8 +217,8 @@ const evmCode = {
 }`,
 
   onSignTypedDataV3: `const onSignTypedDataV3 = async () => {
-  const networkId = parseInt(window.ramper2.provider.networkVersion, 10)
-  const chainId = parseInt(window.ramper2.provider.chainId, 16) || networkId
+  const networkId = parseInt(window.${providerName}.provider.networkVersion, 10)
+  const chainId = parseInt(window.${providerName}.provider.chainId, 16) || networkId
 
   const msgParams = {
     types: {
@@ -257,7 +259,7 @@ const evmCode = {
   }
   try {
     const from = <Your Account>
-    const sign = await window.ramper2.provider.request({
+    const sign = await window.${providerName}.provider.request({
       method: 'eth_signTypedData_v3',
       params: [from, JSON.stringify(msgParams)]
     })
@@ -268,8 +270,8 @@ const evmCode = {
 }`,
 
   signTypedDataV3Verify: `const onVerifySignTypedDataV3 = async () => {
-  const networkId = parseInt(window.ramper2.provider.networkVersion, 10)
-  const chainId = parseInt(window.ramper2.provider.chainId, 16) || networkId
+  const networkId = parseInt(window.${providerName}.provider.networkVersion, 10)
+  const chainId = parseInt(window.${providerName}.provider.chainId, 16) || networkId
 
   const msgParams = {
     types: {
@@ -330,8 +332,8 @@ const evmCode = {
 }`,
 
   onSignTypedDataV4: `const onSignTypedDataV4 = async () => {
-  const networkId = parseInt(window.ramper2.provider.networkVersion, 10)
-  const chainId = parseInt(window.ramper2.provider.chainId, 16) || networkId
+  const networkId = parseInt(window.${providerName}.provider.networkVersion, 10)
+  const chainId = parseInt(window.${providerName}.provider.chainId, 16) || networkId
 
   const msgParams = {
     domain: {
@@ -385,7 +387,7 @@ const evmCode = {
   }
   try {
     const from = <Your Account>
-    const sign = await window.ramper2.provider.request({
+    const sign = await window.${providerName}.provider.request({
       method: 'eth_signTypedData_v4',
       params: [from, JSON.stringify(msgParams)]
     })
@@ -396,8 +398,8 @@ const evmCode = {
 }`,
 
   signTypedDataV4Verify: `const onVerifySignTypedDataV4 = async () => {
-  const networkId = parseInt(window.ramper2.provider.networkVersion, 10)
-  const chainId = parseInt(window.ramper2.provider.chainId, 16) || networkId
+  const networkId = parseInt(window.${providerName}.provider.networkVersion, 10)
+  const chainId = parseInt(window.${providerName}.provider.chainId, 16) || networkId
 
   const msgParams = {
     domain: {
@@ -474,7 +476,7 @@ const evmCode = {
 const solanaCode = {
   solAccounts: `const onSolAccount = async () => {
   try {
-    const result = await window.ramper2.sol.request({
+    const result = await window.${providerName}.sol.request({
       method: 'sol_accounts'
     })
     return result
@@ -495,7 +497,7 @@ const solanaCode = {
     txs.recentBlockhash = (await cnn.getLatestBlockhash()).blockhash
     txs.feePayer = pubKey
 
-    const result = await window.ramper2.sol.request({
+    const result = await window.${providerName}.sol.request({
       method: 'sol_sign',
       params: [txs]
     })
@@ -520,7 +522,7 @@ const solanaCode = {
 
     const transactions = [txs, txs, txs]
 
-    const result = await window.ramper2.sol.request({
+    const result = await window.${providerName}.sol.request({
       method: 'sol_signAllTransactions',
       params: [transactions]
     })
@@ -532,7 +534,7 @@ const solanaCode = {
 
   solSignMessage: `const solSignMessage = async () => {
   try {
-    const result = await window.ramper2.sol.request({
+    const result = await window.${providerName}.sol.request({
       method: 'sol_signMessage',
       params: ['Some Message Should Goes Here']
     })
@@ -546,7 +548,7 @@ const solanaCode = {
 const nearCode = {
   getNearAccount: `const getNearAccount = async () => {
   try {
-    const result = await window.ramper2.near.request({
+    const result = await window.${providerName}.near.request({
       method: 'near_account',
     })
 
@@ -559,7 +561,7 @@ const nearCode = {
 
   getNearAccountState: `const getNearAccountState = async () => {
   try {
-    const result = await window.ramper2.near.request({
+    const result = await window.${providerName}.near.request({
       method: 'near_accountState',
     })
     const ressultAccState = get(result, 'result') || result
@@ -571,7 +573,7 @@ const nearCode = {
 
   nearSignAndSend: `const nearSignAndSend = async () => {
   try {
-    const result = await window.ramper2.near.request({
+    const result = await window.${providerName}.near.request({
       method: 'near_signAndSendTransaction',
       params: [{
         transactions: [{
@@ -593,7 +595,7 @@ const cosmosCode = {
   const chainId = 'pacific-1'
 
   try {
-    const result = await window.ramper2.cosmos.enable(chainId)
+    const result = await window.${providerName}.cosmos.enable(chainId)
     return result || {}
   } catch (err) {
     console.log({ err })
@@ -659,7 +661,7 @@ const cosmosCode = {
   }
 
   try {
-    const result = await window.ramper2.cosmos.request({
+    const result = await window.${providerName}.cosmos.request({
       method: 'cosmos_signDirect',
       params: [{
         chainId,
@@ -718,7 +720,7 @@ const cosmosCode = {
   }
 
   try {
-    const result = window.ramper2.cosmos.request({
+    const result = window.${providerName}.cosmos.request({
       method: 'cosmos_experimentalSuggestChain',
       params: [chainData]
     })
