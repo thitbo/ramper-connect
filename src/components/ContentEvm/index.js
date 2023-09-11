@@ -202,7 +202,8 @@ function ContentEvm() {
       const from = accounts[0]
       const response = await _provider.request({
         method: 'eth_signTypedData',
-        params: [isExtension ? msgParams : JSON.stringify(msgParams), from]
+        // params: [isExtension ? msgParams : JSON.stringify(msgParams), from]
+        params: [JSON.stringify(msgParams), from]
       })
 
       const signTypedDataResult = get(response, 'result') || response

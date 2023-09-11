@@ -222,7 +222,8 @@ const useEvmConnect = () => {
       const from = accounts[0];
       const sign = await ethereum.request({
         method: 'eth_signTypedData',
-        params: [isWindow ? msgParams : JSON.stringify(msgParams), from],
+        // params: [isWindow ? msgParams : JSON.stringify(msgParams), from],
+        params: [JSON.stringify(msgParams), from],
       });
 
       signTypedDataResult = get(sign, 'result') || sign;
