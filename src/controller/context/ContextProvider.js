@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { getProviderName } from '../functions'
 // import { Client, Chain } from 'coin98-connect-sdk'
 
 export const ConnectContext = createContext({
@@ -12,9 +13,12 @@ export const ContextProvider = ({ children }) => {
   // this state will be shared with all components
   const [isConnected, setIsConnected] = useState(false)
   const [state, onUpdateState] = useState({})
+  const providerName = getProviderName()
 
-  const isExtension = !!window.tomowallet
+  const isExtension = !!window[providerName]
   const client = React.useRef({})
+
+  console.log('providerName', providerName);
 
   useEffect(() => {
     console.log('Ramper wallet installed: ', isExtension)
@@ -24,11 +28,13 @@ export const ContextProvider = ({ children }) => {
     // Connect From Extension
     if (isExtension) {
       try {
-        const result = await window.tomowallet.provider.connect()
+        const result = await window[providerName].provider.connect()
         setIsConnected(true)
         setState({ accounts: result });
         return result
-      } catch (e) {}
+      } catch (e) {
+        console.log('err', e);
+      }
     }
   }
 

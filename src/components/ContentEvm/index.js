@@ -13,8 +13,10 @@ import { toChecksumAddress } from 'ethereumjs-util'
 import ButtonConnect from '../ButtonConnect'
 import ConnectCardBox from '../ConnectCard'
 import { ethers } from 'ethers'
-import { evmCode } from '../../controller/commons/constant'
+import { CHAIN_SUPPORT, evmCode } from '../../controller/commons/constant'
 import useEvmConnect from '../../controller/web3/evm'
+import { getProviderName } from '../../controller/functions'
+import DropdownSelectChain from '../DropdownSelectChain'
 
 function stringifiableToHex(value) {
   return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)))
@@ -24,6 +26,11 @@ function ContentEvm() {
   // const [state, setState] = useState({})
   const {state, setState, client, isExtension, isConnected, connect: onConnect } = useConnect()
   // const { onClickConnect } = useEvmConnect()
+
+  const providerName = getProviderName()
+
+  const [selectedChain, setSelectedChain] = useState(CHAIN_SUPPORT[0])
+
 
   const onStateUpdate = (field, value) => {
     if (typeof field === 'object') {
@@ -47,7 +54,7 @@ function ContentEvm() {
 
   const _provider = useMemo(() => {
     if (isExtension) {
-      return window.tomowallet.provider
+      return window[providerName].provider
     }
 
     return client
@@ -56,9 +63,12 @@ function ContentEvm() {
   // Functions
   const onEthAccounts = async () => {
     try {
+      console.log('??? eth_accounts');
       const response = await _provider.request({
         method: 'eth_accounts'
       })
+
+      console.log('response', response);
 
       onStateUpdate(
         'ethAccounts',
@@ -638,7 +648,14 @@ function ContentEvm() {
           )}
         </div>
       )}
-      <div className="masonry sm:masonry-sm md:masonry-md">
+        <DropdownSelectChain
+          options={CHAIN_SUPPORT}
+          selectedOption={selectedChain}
+          setSelectedOption={setSelectedChain}
+        />
+
+      <div className="masonry sm:masonry-sm md:masonry-md mt-5">
+        
         {/* connect actions */}
         <ConnectCardBox title="basic actions">
           <ButtonConnect
@@ -654,7 +671,7 @@ function ContentEvm() {
 
           <ButtonConnect
             isDisable={!isConnected}
-            titleBtn="ETH_Accounts"
+            titleBtn="ETH_Accounts ne"
             onClick={onEthAccounts}
             isNoSpace
             resultTitle="eth_accounts result"

@@ -10,6 +10,7 @@ import { useConnect } from '../controller/context/ContextProvider'
 import bgHeader from '../assets/bg_header.png'
 import bgHeaderMobile from '../assets/bg-header-mobile.png'
 import Coin98TextLogo from '../assets/images/logos/Coin98TextLogo.svg'
+import { getProviderName } from '../controller/functions'
 
 const arrTabs = [
   {
@@ -36,6 +37,8 @@ const arrTabs = [
 
 export function App() {
   const { isConnected, isExtension } = useConnect()
+
+  const providerName = getProviderName()
 
   const [tabChoose, setTabChoose] = useState(arrTabs[0])
   const [state, setState] = useState({})
@@ -110,7 +113,7 @@ export function App() {
         <div className="max-w-screen-xl m-auto h-60 md:h-1/3 px-5 flex flex-col justify-end items-center md:justify-center md:items-start">
           <img src={Coin98TextLogo} className="w-36" alt="" />
           <div className="text-[2.8rem] text-white">
-            <span className="text-[#e5b842]">Tomo Wallet</span> Connect
+            <span className="text-[#e5b842] capitalize">{providerName} Wallet</span> Connect
           </div>
 
           <div className="text-white ">E2E Test Dapps</div>
