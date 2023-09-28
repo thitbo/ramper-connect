@@ -18,7 +18,6 @@ export const ContextProvider = ({ children }) => {
   const isExtension = !!window[providerName]
   const client = React.useRef({})
 
-  console.log('providerName', providerName);
 
   useEffect(() => {
     console.log('Ramper wallet installed: ', isExtension)

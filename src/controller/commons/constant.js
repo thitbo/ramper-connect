@@ -739,7 +739,7 @@ export const CHAIN_SUPPORT = [
   { value: '0x89', chain: 'matic', label: 'Polygon' },
   { value: '0x58', chain: 'tomo', label: 'TomoChain' },
   { value: '0x38', chain: 'binanceSmart', label: 'BNB Smart Chain' },
-  { value: 'solana', chain: 'solana', label: 'Solana' },
-  { value: 'atlantic-2', chain: 'sei', label: 'Sei Testnet' },
-  { value: 'pacific-1', chain: 'seiMainnet', label: 'Sei Mainnet' }
+  // { value: 'solana', chain: 'solana', label: 'Solana' },
+  // { value: 'atlantic-2', chain: 'sei', label: 'Sei Testnet' },
+  // { value: 'pacific-1', chain: 'seiMainnet', label: 'Sei Mainnet' }
 ]

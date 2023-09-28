@@ -5,7 +5,7 @@ import {
   recoverTypedSignatureLegacy,
   recoverTypedSignature_v4
 } from 'eth-sig-util'
-import { get } from 'lodash'
+import { chain, get } from 'lodash'
 import React, { useState, useEffect, useMemo } from 'react'
 import { useConnect } from '../../controller/context/ContextProvider'
 import { toChecksumAddress } from 'ethereumjs-util'
@@ -61,14 +61,100 @@ function ContentEvm() {
   }, [isExtension, client])
 
   // Functions
+
+ 
+
+
+  const onInitState = async () => {
+    console.log('logged ?', isExtension)
+    if (!isExtension) return false
+    try{
+
+      const getChainId = await _provider.request({ method: 'eth_chainId' })
+      // const netVersion = await _provider.request({ method: 'net_version' })
+      // const getAccounts = _provider.request({ method: 'eth_accounts' })
+
+      console.log('getChainId', getChainId);
+     
+      onStateUpdate({
+        chainId: getChainId,
+        // netVersion,
+        // accounts
+      })
+    }catch(e){
+      console.log('e', e);
+      onStateUpdate({
+        chainId: '',
+        netVersion: '',
+        // accounts
+      })
+    }
+    
+  }
+
+  useEffect(() => {
+    const recoveredAddr = recoverPersonalSignature({
+       data: '0x436f696e393820436f6e6e656374204578616d706c65204d657373616765',
+       sig: '0x4633a3e8dff9469bc025001a6d1a710122d3140266b091229c59bba4c52272076a7fe106be1b3d03cbf7b276f9848d5763b640313c2ad90be2e350b8ce640e351c'
+     })
+     console.log('recoveredAddr', recoveredAddr);
+     
+ }, [])
+
+  useEffect(() => {
+    // if (isConnected) {
+      onInitState()
+    // }
+  }, [isExtension])
+
+  const getExtChain = async() => {
+    try{
+    return await _provider.request({ method: 'eth_chainId' })
+
+    }catch(e){
+      return null
+    }
+  }
+  
+
+  const handleConnect = async() => {
+    // const { chainId } = state
+
+    const getChainId = await getExtChain()
+
+    if(getChainId !== selectedChain.value) {
+      try{
+        const network =  await _provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: selectedChain.value }]
+        });
+  
+  
+        onStateUpdate({
+          chainId: get(network, 'chainId'),
+          netVersion: get(network, 'chainId'),
+          // accounts
+        })
+      }catch(e){
+        console.log('err', e);
+      }
+    
+      return 
+    }
+
+    setTimeout(async () => {
+       onConnect()
+    }, 350)
+
+  }
+
+  
   const onEthAccounts = async () => {
     try {
-      console.log('??? eth_accounts');
       const response = await _provider.request({
         method: 'eth_accounts'
       })
 
-      console.log('response', response);
 
       onStateUpdate(
         'ethAccounts',
@@ -152,11 +238,13 @@ function ContentEvm() {
       const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`
       let sign
       sign = personalSign
-      console.log('sign', sign)
+      console.log('sign', { data: msg,
+        sig: sign})
       const recoveredAddr = recoverPersonalSignature({
         data: msg,
         sig: sign
       })
+      console.log('recoveredAddr', recoveredAddr);
       if (recoveredAddr?.toLowerCase() === from?.toLowerCase()) {
         console.log(`SigUtil Successfully verified signer as ${recoveredAddr}`)
         sign = recoveredAddr
@@ -570,25 +658,7 @@ function ContentEvm() {
     }
   }
 
-  const onInitState = async () => {
-    console.log('logged ?')
-    if (!isExtension) return false
-    const getChainId = _provider.request({ method: 'eth_chainId' })
-    const getNetVersion = _provider.request({ method: 'net_version' })
-    const getAccounts = _provider.request({ method: 'eth_accounts' })
-
-    const [chainId, netVersion, accounts] = await Promise.all([
-      getChainId,
-      getNetVersion,
-      getAccounts
-    ])
-
-    onStateUpdate({
-      chainId,
-      netVersion,
-      accounts
-    })
-  }
+  
 
   // funtions handle
   const handleOpenModal = (content, onClickModal, isDisableRunCode) => () => {
@@ -599,13 +669,6 @@ function ContentEvm() {
     })
   }
 
-  useEffect(() => {
-    if (isConnected) {
-      onInitState()
-    }
-  }, [isConnected])
-
-  console.log('check', {isConnected,state });
 
   const isDisableAction =
     !isConnected || (!state.ethAccounts && !state.accounts)
@@ -660,7 +723,7 @@ function ContentEvm() {
         <ConnectCardBox title="basic actions">
           <ButtonConnect
             isDisable={isConnected}
-            onClick={onConnect}
+            onClick={handleConnect}
             titleBtn={isConnected ? 'Connected' : 'Connect'}
             onClickShowCode={handleOpenModal(
               evmCode.connect,
