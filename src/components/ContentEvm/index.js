@@ -262,7 +262,7 @@ function ContentEvm() {
 
       const resEcRecoverAddr = get(ecRecoverAddr, 'result') || ecRecoverAddr
       console.log('ecRecoverAddr', ecRecoverAddr)
-      if (resEcRecoverAddr === from) {
+      if (resEcRecoverAddr?.toLowerCase() === from?.toLowerCase() ) {
         console.log(`Successfully ecRecovered signer as ${resEcRecoverAddr}`)
         sign = resEcRecoverAddr
       } else {
