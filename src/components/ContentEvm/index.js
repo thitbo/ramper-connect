@@ -78,12 +78,9 @@ function ContentEvm() {
    
   }, [isExtension, client])
 
-  console.log('_provider ???', {_provider,providerName });
+  console.log('check provider ???', {_provider,providerName });
 
   // Functions
-
- 
-
 
   const onInitState = async () => {
     console.log('logged ?', isExtension)
