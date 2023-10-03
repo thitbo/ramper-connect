@@ -54,27 +54,26 @@ function ContentEvm() {
 
   const _provider = useMemo(() => {
     // if (isExtension) {
-     
-  
     //   return provider
     // }
-
     // return window?.tomo.provider
 
     let provider = window.coin98.provider
     switch(providerName) {
       case 'tomo':
         // code block
-        provider = window?.tomo?.provider
+        provider = window.tomo?.provider
         break;
       case 'ramper2':
-        provider = window?.ramper2?.provider
+        provider = window.ramper2?.provider
         break;
       case 'fin':
-        provider = window?.fin
+        provider = window.fin
       default:
-        provider = window?.ramper2?.provider
+        provider = window.ramper2?.provider
     }
+
+    return provider
    
   }, [isExtension, client])
 
