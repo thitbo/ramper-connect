@@ -56,9 +56,25 @@ function ContentEvm() {
     if (isExtension) {
       return window[providerName].provider
     }
+    let provider = window.coin98.provider
+    switch(providerName) {
+      case 'tomo':
+        // code block
+        provider = window.tomo.provider
+        break;
+      case 'ramper2':
+        provider = window.ramper2.provider
+        break;
+      case 'fin':
+        provider = window.fin
+      default:
+        provider = window.ramper2.provider
+    }
 
-    return client
+    return provider
   }, [isExtension, client])
+
+  console.log('_provider ???', {_provider,providerName });
 
   // Functions
 
@@ -92,14 +108,14 @@ function ContentEvm() {
     
   }
 
-  useEffect(() => {
-    const recoveredAddr = recoverPersonalSignature({
-       data: '0x436f696e393820436f6e6e656374204578616d706c65204d657373616765',
-       sig: '0x4633a3e8dff9469bc025001a6d1a710122d3140266b091229c59bba4c52272076a7fe106be1b3d03cbf7b276f9848d5763b640313c2ad90be2e350b8ce640e351c'
-     })
-     console.log('recoveredAddr', recoveredAddr);
+//   useEffect(() => {
+//     const recoveredAddr = recoverPersonalSignature({
+//        data: '0x436f696e393820436f6e6e656374204578616d706c65204d657373616765',
+//        sig: '0x4633a3e8dff9469bc025001a6d1a710122d3140266b091229c59bba4c52272076a7fe106be1b3d03cbf7b276f9848d5763b640313c2ad90be2e350b8ce640e351c'
+//      })
+//      console.log('recoveredAddr', recoveredAddr);
      
- }, [])
+//  }, [])
 
   useEffect(() => {
     // if (isConnected) {
@@ -109,9 +125,11 @@ function ContentEvm() {
 
   const getExtChain = async() => {
     try{
+      console.log('_provider', _provider);
     return await _provider.request({ method: 'eth_chainId' })
 
     }catch(e){
+      console.log('err', e);
       return null
     }
   }
@@ -121,6 +139,8 @@ function ContentEvm() {
     // const { chainId } = state
 
     const getChainId = await getExtChain()
+
+    console.log('getChainId', getChainId);
 
     if(getChainId !== selectedChain.value) {
       try{

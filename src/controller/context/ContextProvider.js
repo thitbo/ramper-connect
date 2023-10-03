@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react'
 import { getProviderName } from '../functions'
 // import { Client, Chain } from 'coin98-connect-sdk'
 
@@ -15,7 +15,15 @@ export const ContextProvider = ({ children }) => {
   const [state, onUpdateState] = useState({})
   const providerName = getProviderName()
 
-  const isExtension = !!window[providerName]
+  console.log('isExtension', {
+    check: window[providerName]
+  });
+
+  const isExtension = useMemo(() => {
+    return !!window[providerName]
+  }, [window[providerName]]) 
+
+  
   const client = React.useRef({})
 
 
