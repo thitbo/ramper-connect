@@ -64,7 +64,7 @@ function ContentEvm() {
       switch(providerName) {
         case 'tomo':
           // code block
-          provider = window.tomo?.provider
+          provider = window.tomo
           break;
         case 'ramper2':
           provider = window.ramper2?.provider
@@ -77,7 +77,7 @@ function ContentEvm() {
   
       return provider
     }catch(e){
-      return window.tomo?.provider
+      return window.tomo
     }
    
   }, [isExtension, client])

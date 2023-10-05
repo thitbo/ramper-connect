@@ -82,7 +82,10 @@ const useCosmosConnect = (sdk) => {
       const result = await cosmos.request({
         method: 'cosmos_signDirect',
         params: [{
-          chainId, signer: cosmosKey?.bech32Address, signDoc, origin
+          chainId, 
+          signer: cosmosKey?.bech32Address, 
+          signDoc, 
+          origin
         }]
       })
       return get(result, 'result') || result
