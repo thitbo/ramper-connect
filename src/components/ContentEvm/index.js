@@ -15,8 +15,9 @@ import ConnectCardBox from '../ConnectCard'
 import { ethers } from 'ethers'
 import { CHAIN_SUPPORT, evmCode } from '../../controller/commons/constant'
 import useEvmConnect from '../../controller/web3/evm'
-import { getProviderName } from '../../controller/functions'
 import DropdownSelectChain from '../DropdownSelectChain'
+import { useStoreGlobal } from '../../store/useStoreGlobal'
+import { getProvider } from '../../controller/functions'
 
 function stringifiableToHex(value) {
   return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)))
@@ -27,7 +28,9 @@ function ContentEvm() {
   const {state, setState, client, isExtension, isConnected, connect: onConnect } = useConnect()
   // const { onClickConnect } = useEvmConnect()
 
-  const providerName = getProviderName()
+
+  const providerName = useStoreGlobal((state) => state.appProvider);
+
 
   const [selectedChain, setSelectedChain] = useState(CHAIN_SUPPORT[0])
 
@@ -58,29 +61,10 @@ function ContentEvm() {
     // }
     // return window?.tomo.provider
 
-
-    try{
-      let provider = window.coin98.provider
-      switch(providerName) {
-        case 'tomo':
-          // code block
-          provider = window.tomo
-          break;
-        case 'ramper2':
-          provider = window.ramper2?.provider
-          break;
-        case 'fin':
-          provider = window.fin
-        default:
-          provider = window.ramper2?.provider
-      }
-  
-      return provider
-    }catch(e){
-      return window.tomo
-    }
+    console.log('providerName', providerName);
+    return getProvider(providerName)
    
-  }, [isExtension, client])
+  }, [isExtension, providerName])
 
   console.log('check provider ???', {_provider,providerName });
 

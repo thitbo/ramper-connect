@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react'
-import { getProviderName } from '../functions'
+import { useStoreGlobal } from '../../store/useStoreGlobal'
 // import { Client, Chain } from 'coin98-connect-sdk'
+import {getProvider} from '../../controller/functions'
 
 export const ConnectContext = createContext({
   isConnected: false,
@@ -13,29 +14,32 @@ export const ContextProvider = ({ children }) => {
   // this state will be shared with all components
   const [isConnected, setIsConnected] = useState(false)
   const [state, onUpdateState] = useState({})
-  const providerName = getProviderName()
+
+  const appProvider = useStoreGlobal((state) => state.appProvider);
+
 
   console.log('isExtension', {
-    check: window[providerName]
+    check: window[appProvider]
   });
 
   const isExtension = useMemo(() => {
-    return !!window[providerName]
-  }, [window[providerName]]) 
+    return !!window[appProvider]
+  }, [window[appProvider], appProvider]) 
 
   
   const client = React.useRef({})
 
 
-  useEffect(() => {
-    console.log('Ramper wallet installed: ', isExtension)
-  }, [])
+  
 
   const connect = async () => {
     // Connect From Extension
+
+
     if (isExtension) {
+      const provider = getProvider(appProvider)
       try {
-        const result = await window[providerName].provider.connect()
+        const result = await provider.connect()
         setIsConnected(true)
         setState({ accounts: result });
         return result

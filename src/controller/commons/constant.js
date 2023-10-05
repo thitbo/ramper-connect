@@ -1,5 +1,64 @@
 const providerName = 'tomowallet'
 
+export const REACT_SELECT_THEME = {
+  control: (styles, {isDisabled}) => ({
+    ...styles,
+    backgroundColor: 'transparent',
+    boxShadow: 'unset',
+    borderColor: 'transparent',
+    borderRadius: '8px',
+    color: '#fff',
+    minHeight: "unset",
+    ':hover': {
+      borderColor: '#ffd86f',
+    },
+    ...isDisabled && {cursor: 'no-drop !important'}
+  }),
+  valueContainer: (styles) => ({
+    ...styles,
+    padding: 0,
+  }),
+  multiValue: (styles, { data }) => ({
+    ...styles,
+    color: "#f4f4f4",
+    backgroundColor: "red",
+  }),
+  singleValue: (styles, { isDisabled }) => ({
+    ...styles,
+    color: "#fff",
+    ...isDisabled && {color: "#575757 !important"}
+  }),
+  menu: (styles, { data }) => ({
+    ...styles,
+    color: "#f4f4f4",
+    backgroundColor: "#3b3b3b",
+  }),
+  option: (styles, { data, isSelected }) => ({
+    ...styles,
+    color: "#f4f4f4",
+    backgroundColor: "transparent",
+    ":hover": {
+      backgroundColor: "#5E5E5E",
+    },
+  }),
+  indicatorSeparator: (styles, {}) => ({
+    display: 'none',
+  }),
+  multiValueRemove: (styles, { data }) => ({
+    ...styles,
+    color: "#f4f4f4",
+    ":hover": {
+      backgroundColor: "#7D7D7D",
+      borderRadius: "50%",
+    },
+  }),
+  dropdownIndicator: (styles, { isDisabled }) => ({
+    ...styles,
+    padding: '0',
+    ...isDisabled && {color: "#575757 !important"}
+  })
+};
+
 const evmCode = {
   connect: `const onClickConnect = async () => {
   try {
