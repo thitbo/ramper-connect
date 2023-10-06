@@ -21,6 +21,8 @@ export const getProvider = (name) => {
         break;
       case 'fin':
         provider = window.fin
+      case 'coin98':
+        provider = window.coin98?.provider
       default:
         provider = window.ramper2?.provider
     }
