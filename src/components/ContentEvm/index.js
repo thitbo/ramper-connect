@@ -17,7 +17,7 @@ import { CHAIN_SUPPORT, evmCode } from '../../controller/commons/constant'
 import useEvmConnect from '../../controller/web3/evm'
 import DropdownSelectChain from '../DropdownSelectChain'
 import { useStoreGlobal } from '../../store/useStoreGlobal'
-import { getProvider } from '../../controller/functions'
+import { getEngine } from '../../controller/functions'
 
 function stringifiableToHex(value) {
   return ethers.utils.hexlify(Buffer.from(JSON.stringify(value)))
@@ -60,9 +60,10 @@ function ContentEvm() {
     //   return provider
     // }
     // return window?.tomo.provider
+    const engine =  getEngine(providerName)
 
-    console.log('providerName', providerName);
-    return getProvider(providerName)
+    if(providerName === 'coin98') return engine?.provider
+    return engine
    
   }, [isExtension, providerName])
 

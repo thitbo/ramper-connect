@@ -8,23 +8,23 @@ export const getProviderName = () => {
   }
  
 }
-export const getProvider = (name) => {
+export const getEngine = (name) => {
   try{
-    let provider = window.coin98?.provider
+    let provider = window.coin98
     switch(name) {
       case 'tomo':
         // code block
         provider = window?.tomo
         break;
       case 'ramper2':
-        provider = window?.ramper2?.provider
+        provider = window?.ramper2
         break;
       case 'fin':
         provider = window.fin
       case 'coin98':
-        provider = window.coin98?.provider
+        provider = window.coin98
       default:
-        provider = window.ramper2?.provider
+        provider = window.ramper2
     }
 
     return provider

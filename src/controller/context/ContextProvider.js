@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react'
 import { useStoreGlobal } from '../../store/useStoreGlobal'
 // import { Client, Chain } from 'coin98-connect-sdk'
-import {getProvider} from '../../controller/functions'
+import {getEngine} from '../../controller/functions'
 
 export const ConnectContext = createContext({
   isConnected: false,
@@ -37,9 +37,10 @@ export const ContextProvider = ({ children }) => {
 
 
     if (isExtension) {
-      const provider = getProvider(appProvider)
+      const engine = getEngine(appProvider)
+
       try {
-        const result = await provider.connect()
+        const result = await engine.connect()
         setIsConnected(true)
         setState({ accounts: result });
         return result

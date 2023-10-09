@@ -8,6 +8,8 @@ import useStateCustom from '../../hooks/useStateCustom'
 import bs58 from 'bs58'
 // const Tx = require('@keplr-wallet/proto-types/cosmos/tx/v1beta1/tx')
 import { get } from 'lodash'
+import { useStoreGlobal } from '../../store/useStoreGlobal'
+import { getEngine } from '../../controller/functions'
 
 const chainId = 'pacific-1'
 
@@ -16,13 +18,17 @@ function ContentCosmos() {
 
   const [state, setState] = useStateCustom()
 
-  const _provider = useMemo(() => {
-    if (isExtension) {
-      return window.ramper2.cosmos
-    }
+  const providerName = useStoreGlobal((state) => state.appProvider);
 
-    return client
-  }, [])
+
+  const _provider = useMemo(() => {
+    // if (isExtension) {
+    //   return window.ramper2?.cosmos
+    // }
+    const engine =  getEngine(providerName)
+    return engine?.cosmos
+
+  }, [providerName])
   // connect actions
   const handleConnect = async () => {
     onCosmosAccount()
@@ -30,7 +36,10 @@ function ContentCosmos() {
 
   const onCosmosAccount = async () => {
     try {
+      console.log('chainId', chainId);
       const response = await _provider.enable(chainId)
+
+      console.log('response', response);
       setState('cosmosGetKey', response)
     } catch (e) {}
   }
