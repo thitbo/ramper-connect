@@ -1,10 +1,13 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import ConnectCardBox from '../ConnectCard'
 import ButtonConnect from '../ButtonConnect'
 import { cosmosCode } from '../../controller/commons/constant'
 import { makeSignDoc } from '@cosmjs/launchpad'
 import { useConnect } from '../../controller/context/ContextProvider'
 import useStateCustom from '../../hooks/useStateCustom'
+import { useSigningCosmWasmClient } from '@sei-js/react'
+
+
 import bs58 from 'bs58'
 // const Tx = require('@keplr-wallet/proto-types/cosmos/tx/v1beta1/tx')
 import { get } from 'lodash'
@@ -14,11 +17,16 @@ import { getEngine } from '../../controller/functions'
 const chainId = 'pacific-1'
 
 function ContentCosmos() {
-  const { client, isExtension, isConnected, connect: onConnect } = useConnect()
+  const { client, isExtension, connect: onConnect } = useConnect()
 
   const [state, setState] = useStateCustom()
 
+  const [isConnected, setIsConnected] = useState()
+
   const providerName = useStoreGlobal((state) => state.appProvider);
+
+  const { signingCosmWasmClient } = useSigningCosmWasmClient()
+
 
 
   const _provider = useMemo(() => {
@@ -29,6 +37,11 @@ function ContentCosmos() {
     return engine?.cosmos
 
   }, [providerName])
+
+  const cosmosAddress = useMemo(() => {
+    return get(state, 'cosmosGetKey.bech32Address', '')
+  }, [state]) 
+
   // connect actions
   const handleConnect = async () => {
     onCosmosAccount()
@@ -38,6 +51,10 @@ function ContentCosmos() {
     try {
       console.log('chainId', chainId);
       const response = await _provider.enable(chainId)
+
+      if(response){
+        setIsConnected(true)
+      }
 
       console.log('response', response);
       setState('cosmosGetKey', response)
@@ -223,6 +240,92 @@ function ContentCosmos() {
     }
   }
 
+  const makeDoc = () => {
+    const signer = cosmosAddress
+
+    const msgs = [
+      {
+        type: 'cosmos-sdk/MsgSend',
+        value: {
+          amount: [
+            {
+              amount: 10000,
+              denom: 'ueura'
+            }
+          ],
+          from_address: signer,
+          to_address: signer
+        }
+      }
+    ]
+
+    const fee = {
+      amount: [{ amount: '2000', denom: 'ueura' }],
+      gas: '200000'
+    }
+    const aDocToSign = makeSignDoc(msgs, fee, chainId, 'Some Memo', '269', '17')
+    return aDocToSign
+  }
+
+  const onSignArbitrary = async () => {
+    const result = await _provider.signArbitrary(chainId, cosmosAddress, "Some data goes here")
+
+    console.log('result', result)
+    setState('cosmosSignArbitrary', get(result, 'signature'))
+
+  }
+
+  const onSignAmino = async () => {
+    try{
+      const doc = makeDoc();
+
+      const signed = await _provider.signAmino(chainId, cosmosAddress, doc)
+
+      console.log({signed})
+
+      setState('cosmosSignAmino', signed)
+    }catch(e){
+      console.log('err', e);
+    }
+
+  }
+
+  const onSignDirect = async () => {
+    // const test = await signingCosmWasmClient.sendTokens(cosmosAddress, cosmosAddress, [
+    //   {
+    //     amount: "1",
+    //     denom: "usei"
+    //   }
+    // ], {
+    //   amount: [
+    //     {
+    //       amount: "1",
+    //       denom: "usei"
+    //     }
+    //   ],
+    //   gas: '250000'
+    // })
+
+    // console.log('sign Direct', test)
+
+
+  const messages = {
+    "bodyBytes": "3N8NC3Ft3HThdmgiSunc8ZJDxrxxDUSVE2Vue8oj9LSZKPYejGMgPRM189zv4kMvan94tDYuKRMuybEEXtYsshCJZYZ1ycELankv1QbLtEd5zC6Cw1Hebh7g8XaDLkUYXpkLDJBA9Z3ZAY5rN9NpC2ymQgDnZepfsrAzpJ4rMXd2Vkgi7K28yXW",
+    "authInfoBytes": "QFn867PURPmazUMVvq9x2YygUZe9zrNW4WUdrppTZRMDNxMu3QWm3jLpNKADT6NdmRuaoDPh5U1hjnXaeRLkRDQv2ScYqFvqsaEh48jJijAWK8pYbKRn3EtAVE568G5U12iRheYv",
+    "chainId": chainId,
+    "accountNumber": {
+        "low": 110199,
+        "high": 0,
+        "unsigned": false
+    }
+  }
+
+    const test = await _provider.signDirect(chainId, cosmosAddress, messages)
+
+    setState('cosmosSignDirect', test)
+
+  }
+
   // funtions handle
   const handleOpenModal = (content, onClickModal, isDisableRunCode) => () => {
     window.openModal({
@@ -232,13 +335,12 @@ function ContentCosmos() {
     })
   }
 
-  useEffect(() => {
-    if (isConnected) {
-      onCosmosAccount()
-    }
-  }, [isConnected])
+  // useEffect(() => {
+  //   if (isConnected) {
+  //     onCosmosAccount()
+  //   }
+  // }, [isConnected])
 
-  const address = get(state, 'cosmosGetKey.bech32Address', '')
 
   return (
     <>
@@ -250,9 +352,9 @@ function ContentCosmos() {
             </div>
           )}
           <div>
-            {address && (
+            {cosmosAddress && (
               <div className="w-full sm:w-[auto] px-5 py-3 bg-black242424 text-white text-[13px] rounded-[32px] border-[1px] border-[#e5b842] break-words">
-                <span className="text-[#d9b432]">Account</span> {address}
+                <span className="text-[#d9b432]">Account</span> {cosmosAddress}
               </div>
             )}
           </div>
@@ -288,7 +390,7 @@ function ContentCosmos() {
           <ButtonConnect
             isDisable={!isConnected}
             titleBtn="Sign Amimo"
-            onClick={handleGetCosmosSignAmino}
+            onClick={onSignAmino}
             onClickShowCode={handleOpenModal(
               cosmosCode.cosmosSignAmino,
               handleGetCosmosSignAmino,
@@ -304,7 +406,7 @@ function ContentCosmos() {
           <ButtonConnect
             isDisable={!isConnected}
             titleBtn="Sign Direct"
-            onClick={handleGetSignDirect}
+            onClick={onSignDirect}
             onClickShowCode={handleOpenModal(
               cosmosCode.cosmosSignDirect,
               handleGetSignDirect,
@@ -312,7 +414,24 @@ function ContentCosmos() {
             )}
             isNoSpace
             resultTitle="Sign Direct Result"
-            // result={state.nearAccount && state.nearAccount}
+            result={state.cosmosSignDirect}
+
+          />
+        </ConnectCardBox>
+
+        <ConnectCardBox title="Sign Arbitrary">
+          <ButtonConnect
+            isDisable={!isConnected}
+            titleBtn="Sign Arbitrary"
+            onClick={onSignArbitrary}
+            // onClickShowCode={handleOpenModal(
+            //   cosmosCode.cosmosSignAmino,
+            //   handleGetCosmosSignAmino,
+            //   !isConnected
+            // )}
+            isNoSpace
+            resultTitle="Sign Amimo Result"
+            result={state.cosmosSignArbitrary}
           />
         </ConnectCardBox>
 
