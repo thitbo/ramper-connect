@@ -24,7 +24,7 @@ export const getEngine = (name) => {
       case 'coin98':
         provider = window.coin98
       default:
-        provider = window.ramper2
+        provider = window.coin98
     }
 
     return provider

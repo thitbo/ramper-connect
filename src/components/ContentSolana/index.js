@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ConnectCardBox from '../ConnectCard';
 import ButtonConnect from '../ButtonConnect';
 import { solanaCode } from '../../controller/commons/constant';
@@ -11,25 +11,43 @@ import {
   SystemProgram,
   Transaction,
 } from '@solana/web3.js';
+import { getEngine } from '../../controller/functions';
+import { useStoreGlobal } from '../../store/useStoreGlobal';
+import bs58 from 'bs58'
 
 const cnn = new Connection('https://api.testnet.solana.com');
 
 function ContentSolana() {
   const [state, setState] = useStateCustom();
+  const [isConnected, setIsConnected] = useState();
 
-  const { isConnected, isExtension, client, connect: onConnect } = useConnect();
+  const { isExtension, client, connect: onConnect } = useConnect();
+  const providerName = useStoreGlobal((state) => state.appProvider);
 
   const _provider = useMemo(() => {
     if (isExtension) {
-      return window.ramper2.sol;
+       // }
+      const engine = getEngine(providerName)
+      return engine?.sol
     }
 
     return client;
-  }, []);
+  }, [providerName]);
+
+  const onConnectSol = async() => {
+    const response = await _provider.request({ method: 'sol_requestAccounts' });
+
+    console.log('res sol_requestAccounts', response);
+    if(response){
+      setIsConnected(true)
+    }
+  }
 
   const onSolAccount = async () => {
+
     try {
       const response = await _provider.request({ method: 'sol_accounts' });
+      console.log('sol acc', response);
       setState({
         solAccounts: isExtension ? response : response.error || response.result,
       });
@@ -108,10 +126,13 @@ function ContentSolana() {
 
   const onSolSignMessage = async () => {
     try {
+      const encodeMsg  = bs58.encode(new Buffer('Some Message Should Goes Here'));
       const response = await _provider.request({
         method: 'sol_signMessage',
-        params: ['Some Message Should Goes Here'],
+        params: [encodeMsg],
       });
+
+      console.log('response onSolSignMessage', response);
 
       setState({
         solSignMessageAddress: isExtension
@@ -124,6 +145,7 @@ function ContentSolana() {
     } catch (e) {}
   };
 
+
   // connect actions
   const handleOpenModal = (code, click, status) => () => {
     window.openModal({
@@ -133,11 +155,11 @@ function ContentSolana() {
     });
   };
 
-  useEffect(() => {
-    if (isConnected) {
-      onSolAccount();
-    }
-  }, [isConnected]);
+  // useEffect(() => {
+  //   if (isConnected) {
+  //     onSolAccount();
+  //   }
+  // }, [isConnected]);
 
   const walletAddress = state.solAccounts && state.solAccounts[0];
 
@@ -158,7 +180,7 @@ function ContentSolana() {
           <ButtonConnect
             isDisable={isConnected}
             titleBtn={isConnected ? 'Connected' : 'Connect'}
-            onClick={onConnect}
+            onClick={onConnectSol}
             isHideShowCode
           />
 

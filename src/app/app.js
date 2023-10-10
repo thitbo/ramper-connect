@@ -58,10 +58,6 @@ export function App() {
   const setAppProvider = useStoreGlobal((state) => state.setAppProvider);
 
 
-  useEffect(() => {
-    console.log('appProvider', appProvider);
-  }, [appProvider])
-
 
 
   const [state, setState] = useState({})

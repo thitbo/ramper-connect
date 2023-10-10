@@ -18,9 +18,9 @@ export const ContextProvider = ({ children }) => {
   const appProvider = useStoreGlobal((state) => state.appProvider);
 
 
-  console.log('isExtension', {
-    check: window[appProvider]
-  });
+  // console.log('isExtension', {
+  //   check: window[appProvider]
+  // });
 
   const isExtension = useMemo(() => {
     return !!window[appProvider]
@@ -34,7 +34,7 @@ export const ContextProvider = ({ children }) => {
 
   const connect = async () => {
     // Connect From Extension
-
+    // for eVM 
 
     if (isExtension) {
       let engine = getEngine(appProvider)

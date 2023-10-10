@@ -72,7 +72,6 @@ function ContentEvm() {
   // Functions
 
   const onInitState = async () => {
-    console.log('logged ?', isExtension)
     if (!isExtension) return false
     try{
 
@@ -222,7 +221,8 @@ function ContentEvm() {
   const onPersonalSign = async () => {
     const { ethAccounts: accounts } = state
     try {
-      const exampleMessage = 'Coin98 Connect Example Message'
+      // const exampleMessage = 'Coin98 Connect Example Message'
+      const exampleMessage = 'Your Go-To Digital Wallet For The Connected World'
       const from = accounts[0]
       const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`
       const response = await _provider.request({
@@ -243,7 +243,7 @@ function ContentEvm() {
 
   const onVerifyPersonalSignature = async () => {
     const { ethAccounts: accounts, personalSign } = state
-    const exampleMessage = 'Coin98 Connect Example Message'
+    const exampleMessage = 'Your Go-To Digital Wallet For The Connected World'
     try {
       const from = accounts[0]
       const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`
@@ -280,16 +280,27 @@ function ContentEvm() {
         console.log(
           `Failed to verify signer when comparing ${resEcRecoverAddr} to ${from}`
         )
+        sign = 'Failed to verify signer when comparing'
       }
 
-      onStateUpdate({
-        verifyPersonalSignature: recoveredAddr,
-        verifyPersonalSignatureEcRecover: resEcRecoverAddr
-      })
+      onStateUpdate('verifyPersonalSignature', sign)
+      
     } catch (err) {
       console.error(err)
     }
   }
+
+  // useEffect(() => {
+  //   const ms = 'Your Go-To Digital Wallet For The Connected World'
+  //   const msg = `0x${Buffer.from(ms, 'utf8').toString('hex')}`
+
+  //   const recoveredAddr = recoverPersonalSignature({
+  //     data: msg,
+  //     sig: '0x596f757220476f2d546f204469676974616c2057616c6c657420466f722054686520436f6e6e656374656420576f726c64'
+  //   })
+
+  //   console.log('recoveredAddr', recoveredAddr);
+  // }, [])
 
   const onSignTypedData = async () => {
     const { ethAccounts: accounts } = state
@@ -780,19 +791,20 @@ function ContentEvm() {
             isNoSpace
             // resultTitle="verify personal signature result"
             // result={state.verifyPersonalSignature}
-            resultArr={
-              state.verifyPersonalSignature &&
-              state.verifyPersonalSignatureEcRecover && [
-                {
-                  title: 'eth-sig-util recovery result',
-                  result: state.verifyPersonalSignature
-                },
-                {
-                  title: 'personal_ecRecover result',
-                  result: state.verifyPersonalSignatureEcRecover
-                }
-              ]
-            }
+            // resultArr={
+            //   state.verifyPersonalSignature &&
+            //   state.verifyPersonalSignatureEcRecover && [
+            //     {
+            //       title: 'eth-sig-util recovery result',
+            //       result: state.verifyPersonalSignature
+            //     },
+            //     {
+            //       title: 'personal_ecRecover result',
+            //       result: state.verifyPersonalSignatureEcRecover
+            //     }
+            //   ]
+            // }
+            result={state.verifyPersonalSignature}
             onClickShowCode={handleOpenModal(
               evmCode.personalVerify,
               onVerifyPersonalSignature,
