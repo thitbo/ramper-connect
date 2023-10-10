@@ -62,7 +62,7 @@ function ContentEvm() {
     // return window?.tomo.provider
     const engine =  getEngine(providerName)
 
-    if(providerName === 'coin98') return engine?.provider
+    if(providerName === 'coin98' || providerName === 'ramper2') return engine?.provider
     return engine
    
   }, [isExtension, providerName])
@@ -130,7 +130,8 @@ function ContentEvm() {
 
     const getChainId = await getExtChain()
 
-    console.log('getChainId', getChainId);
+    if(!getChainId) return
+
 
     if(getChainId !== selectedChain.value) {
       try{

@@ -37,8 +37,11 @@ export const ContextProvider = ({ children }) => {
 
 
     if (isExtension) {
-      const engine = getEngine(appProvider)
-
+      let engine = getEngine(appProvider)
+      if(appProvider === 'coin98' || appProvider === 'ramper2'){
+        engine = engine.provider
+      }
+      
       try {
         const result = await engine.connect()
         setIsConnected(true)
