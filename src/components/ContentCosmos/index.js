@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import ConnectCardBox from '../ConnectCard'
 import ButtonConnect from '../ButtonConnect'
-import { cosmosCode } from '../../controller/commons/constant'
+import { COSMOS_CHAIN, cosmosCode } from '../../controller/commons/constant'
 import { makeSignDoc } from '@cosmjs/launchpad'
 import { useConnect } from '../../controller/context/ContextProvider'
 import useStateCustom from '../../hooks/useStateCustom'
@@ -13,8 +13,8 @@ import bs58 from 'bs58'
 import { get } from 'lodash'
 import { useStoreGlobal } from '../../store/useStoreGlobal'
 import { getEngine } from '../../controller/functions'
+import DropdownSelectChain from '../DropdownSelectChain'
 
-const chainId = 'pacific-1'
 
 function ContentCosmos() {
   const { client, isExtension, connect: onConnect } = useConnect()
@@ -22,10 +22,13 @@ function ContentCosmos() {
   const [state, setState] = useStateCustom()
 
   const [isConnected, setIsConnected] = useState()
+  const [selectedChain, setSelectedChain] = useState(COSMOS_CHAIN[0])
+
 
   const providerName = useStoreGlobal((state) => state.appProvider);
 
   const { signingCosmWasmClient } = useSigningCosmWasmClient()
+
 
 
 
@@ -34,13 +37,22 @@ function ContentCosmos() {
     //   return window.ramper2?.cosmos
     // }
     const engine =  getEngine(providerName)
-    return engine?.cosmos
+    if(providerName === 'coin98' || providerName === 'ramper2') return engine?.cosmos
+    return engine
 
   }, [providerName])
+
+  console.log('cosmos provider ???', {_provider,providerName });
+
 
   const cosmosAddress = useMemo(() => {
     return get(state, 'cosmosGetKey.bech32Address', '')
   }, [state]) 
+
+
+const chainId = useMemo(() => {
+  return selectedChain.value
+}, [selectedChain])
 
   // connect actions
   const handleConnect = async () => {
@@ -49,8 +61,9 @@ function ContentCosmos() {
 
   const onCosmosAccount = async () => {
     try {
-      console.log('chainId', chainId);
       const response = await _provider.enable(chainId)
+
+      console.log('response', response);
 
       if(response){
         setIsConnected(true)
@@ -58,7 +71,9 @@ function ContentCosmos() {
 
       console.log('response', response);
       setState('cosmosGetKey', response)
-    } catch (e) {}
+    } catch (e) {
+      console.log('err connect', e);
+    }
   }
 
   const handleGetKeyCosmos = async () => {
@@ -360,7 +375,12 @@ function ContentCosmos() {
           </div>
         </div>
       )}
-      <div className="masonry sm:masonry-sm md:masonry-md">
+       <DropdownSelectChain
+          options={COSMOS_CHAIN}
+          selectedOption={selectedChain}
+          setSelectedOption={setSelectedChain}
+        />
+      <div className="masonry sm:masonry-sm md:masonry-md mt-5">
         {/* connect actions */}
         <ConnectCardBox title="basic actions">
           <ButtonConnect

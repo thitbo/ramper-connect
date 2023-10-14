@@ -62,12 +62,14 @@ function ContentEvm() {
     // return window?.tomo.provider
     const engine =  getEngine(providerName)
 
+    console.log('engine', engine);
+
     if(providerName === 'coin98' || providerName === 'ramper2') return engine?.provider
     return engine
    
   }, [isExtension, providerName])
 
-  console.log('check provider ???', {_provider,providerName });
+  console.log('evm provider ???', {_provider,providerName });
 
   // Functions
 

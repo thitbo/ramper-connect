@@ -21,10 +21,12 @@ export const getEngine = (name) => {
         break;
       case 'fin':
         provider = window.fin
+      case 'ninji':
+        provider = window.ninji
       case 'coin98':
         provider = window.coin98
       default:
-        provider = window.coin98
+        provider = window.ninji
     }
 
     return provider

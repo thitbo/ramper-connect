@@ -42,7 +42,7 @@ const WALLETS_SUPPORT = [
   { value: 'tomo',  label: 'Tomo' },
   { value: 'fin',  label: 'Fin' },
   { value: 'ramper2', label: 'Ramper' },
- 
+  { value: 'ninji', label: 'Ninji' },
 ]
 
 export function App() {

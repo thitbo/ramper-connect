@@ -802,3 +802,8 @@ export const CHAIN_SUPPORT = [
   // { value: 'atlantic-2', chain: 'sei', label: 'Sei Testnet' },
   // { value: 'pacific-1', chain: 'seiMainnet', label: 'Sei Mainnet' }
 ]
+
+export const COSMOS_CHAIN = [
+  { value: 'pacific-1', chain: 'sei', label: 'Sei-Mainnet' },
+  { value: 'injective-1', chain: 'injective', label: 'Injective' },
+]
