@@ -37,7 +37,12 @@ function ContentCosmos() {
     //   return window.ramper2?.cosmos
     // }
     const engine =  getEngine(providerName)
+
+    console.log('engine ne', {engine, providerName});
     if(providerName === 'coin98' || providerName === 'ramper2') return engine?.cosmos
+
+    if(providerName === 'fin') return window.fin
+    
     return engine
 
   }, [providerName])
@@ -61,6 +66,9 @@ const chainId = useMemo(() => {
 
   const onCosmosAccount = async () => {
     try {
+      console.log('ccheck id', {
+        chainId, _provider
+      });
       const response = await _provider.enable(chainId)
 
       console.log('response', response);
@@ -293,6 +301,10 @@ const chainId = useMemo(() => {
   const onSignAmino = async () => {
     try{
       const doc = makeDoc();
+
+      console.log('check data pre', {
+        chainId, cosmosAddress
+      });
 
       const signed = await _provider.signAmino(chainId, cosmosAddress, doc)
 
