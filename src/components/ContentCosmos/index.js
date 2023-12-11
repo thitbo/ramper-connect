@@ -38,8 +38,9 @@ function ContentCosmos() {
     // }
     const engine =  getEngine(providerName)
 
-    console.log('engine ne', {engine, providerName});
-    if(providerName === 'coin98' || providerName === 'ramper2') return engine?.cosmos
+    if(providerName === 'coin98') return window?.coin98?.cosmos
+
+    if(providerName === 'ramper2') return window?.ramper2?.cosmos
 
     if(providerName === 'fin') return window.fin
     
