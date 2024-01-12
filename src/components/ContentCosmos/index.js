@@ -6,6 +6,7 @@ import { makeSignDoc } from '@cosmjs/launchpad'
 import { useConnect } from '../../controller/context/ContextProvider'
 import useStateCustom from '../../hooks/useStateCustom'
 import { useSigningCosmWasmClient } from '@sei-js/react'
+import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 
 
 import bs58 from 'bs58'
@@ -290,6 +291,32 @@ const chainId = useMemo(() => {
     const aDocToSign = makeSignDoc(msgs, fee, chainId, 'Some Memo', '269', '17')
     return aDocToSign
   }
+  const makeDocHighGas = () => {
+    const signer = cosmosAddress
+
+    const msgs = [
+      {
+        type: 'cosmos-sdk/MsgSend',
+        value: {
+          amount: [
+            {
+              amount: 10000,
+              denom: 'usei'
+            }
+          ],
+          from_address: signer,
+          to_address: signer
+        }
+      }
+    ]
+
+    const fee = {
+      amount: [{ amount: '2000000', denom: 'usei' }],
+      gas: '200000'
+    }
+    const aDocToSign = makeSignDoc(msgs, fee, chainId, 'Some Memo', '269', '17')
+    return aDocToSign
+  }
 
   const onSignArbitrary = async () => {
     const result = await _provider.signArbitrary(chainId, cosmosAddress, "Some data goes here")
@@ -302,6 +329,9 @@ const chainId = useMemo(() => {
   const onSignAmino = async () => {
     try{
       const doc = makeDoc();
+
+      console.log('doc', doc);
+
 
       console.log('check data pre', {
         chainId, cosmosAddress
@@ -333,7 +363,6 @@ const chainId = useMemo(() => {
     //   ],
     //   gas: '250000'
     // })
-
     // console.log('sign Direct', test)
 
 
@@ -352,6 +381,26 @@ const chainId = useMemo(() => {
 
     setState('cosmosSignDirect', test)
 
+  }
+
+  const onSignDirectHighGas = async () => {
+    const messages = {
+      "bodyBytes": "RafbuojSF3B8CCbbkBTVUWbkFgyGTQJsr1MD6gBU22WCU9hMSqc3qrnA1qipZwT8zQjYaBdzn3epeSZdPVoouadmT8BA8DTELZAea6SYo2qba6bUPYPDP38GhQWVwyNUDsL3bVyWw7KQgnPwCBoJe6DWjSKPRchfCT7hCcrX23xqbPEfhkGdEmGaX2bTdAMoyKrKVJftNsGLzwPsuYtyNJZjYuqsHqPwixMbvExgpFncVX35ipAk87Spxs68NQi357YQexAo9ijvytkjxsEkxgpo7Zz4XS2ajtpyJWLrtLY8frqXk7cRQ4ie4wuszGFnwDdLeAfmUYUgAhQEtYnT29jGhD5GDXc93HvQx44VH8yeDQvDWXJsS7GUN43Ehd7R3L8pnS4PZomoZpspEtXQTxXQU7yKQjsJwcn1FFQbLT6uWiyxzQvU9aCGn8dnWVWRk9krEUZXBgy4YiYjLdiB7ehis976ZSy9c2nRxPP2pn1MniQuqV8kdoP9kgHq5SdB94Gihv3cMP2WLqwUbX9Wce8RzLhjyPQmmXwSvPwJsVhkccJMR9FRh15RyBLtuBmxscg5tjKBMYRKL5JU5dCRUUD5G9f3y4Qx1mEkdag6WXBopCnJPu9RE",
+      "authInfoBytes": "4tWt87EK2pSxNgatqnvnMmi3inBD1Vt3smubgcNNhxszcozzWNAh6tu4Qjbv2jnmHB564Rjs3HtKUoNMfVbqAJ3Q9xggQ28vLxJkFZdeVaztMQw7qVHstTLWe1ietZYEUdJXDbrpW1qkMJ9WBc",
+      "chainId": chainId,
+      "accountNumber": {
+          "low": 445902,
+          "high": 0,
+          "unsigned": false
+      }
+    }
+
+
+    const test = await _provider.signDirect(chainId, cosmosAddress, messages)
+
+    setState('cosmosSignDirect', test)
+
+   
   }
 
   // funtions handle
@@ -440,6 +489,23 @@ const chainId = useMemo(() => {
             isDisable={!isConnected}
             titleBtn="Sign Direct"
             onClick={onSignDirect}
+            onClickShowCode={handleOpenModal(
+              cosmosCode.cosmosSignDirect,
+              handleGetSignDirect,
+              !isConnected
+            )}
+            isNoSpace
+            resultTitle="Sign Direct Result"
+            result={state.cosmosSignDirect}
+
+          />
+        </ConnectCardBox>
+
+        <ConnectCardBox title="Sign Direct High Gas">
+          <ButtonConnect
+            isDisable={!isConnected}
+            titleBtn="Sign Direct"
+            onClick={onSignDirectHighGas}
             onClickShowCode={handleOpenModal(
               cosmosCode.cosmosSignDirect,
               handleGetSignDirect,
