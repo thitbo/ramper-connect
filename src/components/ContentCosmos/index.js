@@ -274,7 +274,7 @@ const chainId = useMemo(() => {
           amount: [
             {
               amount: 10000,
-              denom: 'ueura'
+              denom: 'usei'
             }
           ],
           from_address: signer,
@@ -284,7 +284,7 @@ const chainId = useMemo(() => {
     ]
 
     const fee = {
-      amount: [{ amount: '2000', denom: 'ueura' }],
+      amount: [{ amount: '20000', denom: 'usei' }],
       gas: '200000'
     }
     const aDocToSign = makeSignDoc(msgs, fee, chainId, 'Some Memo', '269', '17')
