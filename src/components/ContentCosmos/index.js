@@ -385,8 +385,8 @@ const chainId = useMemo(() => {
 
   const onSignDirectHighGas = async () => {
     const messages = {
-      "bodyBytes": "RafbuojSF3B8CCbbkBTVUWbkFgyGTQJsr1MD6gBU22WCU9hMSqc3qrnA1qipZwT8zQjYaBdzn3epeSZdPVoouadmT8BA8DTELZAea6SYo2qba6bUPYPDP38GhQWVwyNUDsL3bVyWw7KQgnPwCBoJe6DWjSKPRchfCT7hCcrX23xqbPEfhkGdEmGaX2bTdAMoyKrKVJftNsGLzwPsuYtyNJZjYuqsHqPwixMbvExgpFncVX35ipAk87Spxs68NQi357YQexAo9ijvytkjxsEkxgpo7Zz4XS2ajtpyJWLrtLY8frqXk7cRQ4ie4wuszGFnwDdLeAfmUYUgAhQEtYnT29jGhD5GDXc93HvQx44VH8yeDQvDWXJsS7GUN43Ehd7R3L8pnS4PZomoZpspEtXQTxXQU7yKQjsJwcn1FFQbLT6uWiyxzQvU9aCGn8dnWVWRk9krEUZXBgy4YiYjLdiB7ehis976ZSy9c2nRxPP2pn1MniQuqV8kdoP9kgHq5SdB94Gihv3cMP2WLqwUbX9Wce8RzLhjyPQmmXwSvPwJsVhkccJMR9FRh15RyBLtuBmxscg5tjKBMYRKL5JU5dCRUUD5G9f3y4Qx1mEkdag6WXBopCnJPu9RE",
-      "authInfoBytes": "4tWt87EK2pSxNgatqnvnMmi3inBD1Vt3smubgcNNhxszcozzWNAh6tu4Qjbv2jnmHB564Rjs3HtKUoNMfVbqAJ3Q9xggQ28vLxJkFZdeVaztMQw7qVHstTLWe1ietZYEUdJXDbrpW1qkMJ9WBc",
+      "bodyBytes": "6iy2EtHufFHbYNDADihJkrqwZoKDQopX5Nekz5QRJLT6yD8WYXaqDq2n2EnFfMWNH3r8jG6GMf8i6atP697Tr7dmPUNd1yc5yokWUv6aYrk2SUyB2uJ4UWpJSBsw93QSLfBb4ZVkejzCtYAyFcwzUc1uPCMU7yZBp6ru1SSoVxAUYhuHvL2Qf6HPUr83eSmG3Mhm4Qrzs22SsZ",
+      "authInfoBytes": "CaQ4wL9bCu5yfg98yV7S1S6ygAhNw1xtmgQNivogKvJ1FqQM4vtjGSWw69guziTeUEkjRK6WPqVwVxQE3SQcA1MuApSoSaZ1dCpRwKho4Yw5RSksB3CzfDbjBizCVukDmGE3WddNu7uL1tD",
       "chainId": chainId,
       "accountNumber": {
           "low": 445902,
