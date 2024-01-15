@@ -319,10 +319,18 @@ const chainId = useMemo(() => {
   }
 
   const onSignArbitrary = async () => {
+    console.log('log check Data', {chainId, cosmosAddress});
     const result = await _provider.signArbitrary(chainId, cosmosAddress, "Some data goes here")
 
     console.log('result', result)
-    setState('cosmosSignArbitrary', get(result, 'signature'))
+    setState('cosmosSignArbitrary', result)
+
+  }
+
+  const onVerifyArbitrary = async () => {
+
+    const result = await _provider.verifyArbitrary(chainId, cosmosAddress, "Some data goes here", state.cosmosSignArbitrary)
+    console.log('result verify', result);
 
   }
 
@@ -518,6 +526,7 @@ const chainId = useMemo(() => {
           />
         </ConnectCardBox>
 
+
         <ConnectCardBox title="Sign Arbitrary">
           <ButtonConnect
             isDisable={!isConnected}
@@ -531,6 +540,14 @@ const chainId = useMemo(() => {
             isNoSpace
             resultTitle="Sign Amimo Result"
             result={state.cosmosSignArbitrary}
+          />
+
+          <br/>
+
+          <ButtonConnect
+             isDisable={!state.cosmosSignArbitrary}
+             titleBtn="Verify Arbitrary"
+             onClick={onVerifyArbitrary}
           />
         </ConnectCardBox>
 
