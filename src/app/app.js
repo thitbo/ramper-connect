@@ -13,7 +13,7 @@ import Coin98TextLogo from '../assets/images/logos/Coin98TextLogo.svg'
 import DropdownSelectChain from '../components/DropdownSelectChain'
 import { REACT_SELECT_THEME } from '../controller/commons/constant'
 import { useStoreGlobal } from '../store/useStoreGlobal'
-import CallTeleMessage from '../components/CallTeleMesage'
+// import CallTeleMessage from '../components/CallTeleMesage'
 
 const arrTabs = [
   {
@@ -156,7 +156,6 @@ export function App() {
           <p className='text-white text-xs'>Is Active : {isExtension ? 'true' : 'false'}</p>
         </div>
 
-        <CallTeleMessage/>
 
         <div className="max-w-screen-xl m-auto flex items-center mt-8 px-5 md:overflow-x-auto scrollbar-hide">
           {renderTab()}
