@@ -10,26 +10,24 @@ export const getProviderName = () => {
 }
 export const getEngine = (name) => {
   try{
-    let provider = window.coin98
-    switch(name) {
-      case 'tomo':
-        // code block
-        provider = window?.tomo
-        break;
-      case 'ramper2':
-        provider = window?.ramper2
-        break;
-      case 'fin':
-        provider = window.fin
-      case 'ninji':
-        provider = window.ninji
-      case 'coin98':
-        provider = window.coin98
-      default:
-        provider = window.ninji
+
+    if(name === 'tomo'){
+      return window?.tomo
+    }
+    if(name === 'ramper2'){
+      return window?.ramper2
+    }
+    if(name === 'fin'){
+      return window?.fin
+    }
+    if(name === 'ninji'){
+      return window?.ninji
+    }
+    if(name === 'coin98'){
+      return window?.coin98
     }
 
-    return provider
+    return window.coin98
   }catch(e){
     console.log('err', e);
     return null
