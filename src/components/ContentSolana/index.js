@@ -100,11 +100,11 @@ function ContentSolana() {
       txs.recentBlockhash = (await cnn.getLatestBlockhash()).blockhash;
       txs.feePayer = pubKey;
 
-      const transactions = [txs, txs, txs];
+      // const transactions = [txs, txs, txs];
 
       const response = await _provider.request({
         method: 'sol_signAllTransactions',
-        params: [transactions],
+        params: [txs],
       });
       console.log(
         '🚀 ~ file: index.js ~ line 82 ~ onSolSignAllTransactions ~ response',
@@ -144,6 +144,40 @@ function ContentSolana() {
       });
     } catch (e) {}
   };
+
+  const onSolSignAndSendTransaction = async () => {
+    const pubKey = new PublicKey(state.solAccounts[0]);
+
+    console.log('pubKey', pubKey.toBase58());
+      const txs = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: pubKey,
+          toPubkey: pubKey,
+          lamports: LAMPORTS_PER_SOL / 100,
+        })
+      );
+
+      txs.recentBlockhash = (await cnn.getLatestBlockhash()).blockhash;
+      txs.feePayer = pubKey;
+
+      const transactions = [txs];
+
+      const response = await _provider.request({
+        method: 'sol_signAndSendTransaction',
+        params: transactions,
+      });
+
+      console.log('response onSolSignAndSendTransaction', response);
+
+       setState({
+        solSignAllTransactionPublicKey: isExtension
+          ? response.publicKey
+          : JSON.stringify(response.error || response.result?.publicKey),
+        solSignAllTransactionSignatures: isExtension
+          ? response.signatures
+          : JSON.stringify(response.error || response.result?.signatures),
+      });
+  }
 
 
   // connect actions
@@ -272,6 +306,35 @@ function ContentSolana() {
             )}
             isNoSpace
             resultTitle='Sign Messages'
+            // result={state.solSignMessage}
+            resultArr={
+              state.solSignMessageAddress &&
+              state.solSignMessageSignature && [
+                {
+                  title: 'Public Key Result',
+                  result: state.solSignMessageAddress,
+                },
+                {
+                  title: 'Signature Result',
+                  result: state.solSignMessageSignature,
+                },
+              ]
+            }
+          />
+        </ConnectCardBox>
+
+        <ConnectCardBox title='sign and send transaction'>
+          <ButtonConnect
+            isDisable={!state.solAccounts}
+            titleBtn='Sign Messages'
+            onClick={onSolSignAndSendTransaction}
+            onClickShowCode={handleOpenModal(
+              solanaCode.solSignAndSendTransaction,
+              onSolSignAndSendTransaction,
+              !state.solAccounts
+            )}
+            isNoSpace
+            resultTitle='Sign and send Messages'
             // result={state.solSignMessage}
             resultArr={
               state.solSignMessageAddress &&

@@ -1,4 +1,4 @@
-const providerName = 'tomowallet'
+const providerName = 'coin98'
 
 export const REACT_SELECT_THEME = {
   control: (styles, {isDisabled}) => ({
@@ -596,6 +596,24 @@ const solanaCode = {
     const result = await window.${providerName}.sol.request({
       method: 'sol_signMessage',
       params: ['Some Message Should Goes Here']
+    })
+    return result
+  } catch (err) {
+    console.log({ err })
+  }
+}`,
+  solSignAndSendTransaction: `const solSignAndSendTransaction = async () => {
+  try {
+   const txs = new Transaction().add(
+          SystemProgram.transfer({
+            fromPubkey: pubKey,
+            toPubkey: pubKey,
+            lamports: LAMPORTS_PER_SOL / 100,
+          })
+        );
+    const result = await window.${providerName}.sol.request({
+      method: 'sol_signAndSendTransaction',
+      params: [txs]
     })
     return result
   } catch (err) {
